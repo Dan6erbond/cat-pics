@@ -5,9 +5,10 @@ import {
   BrowserRouter as Router,
   Link as RouterLink,
   Route,
-  Switch,
+  Switch
 } from "react-router-dom";
 import "./App.css";
+import Cats from "./pages/cats";
 
 const queryClient = new QueryClient();
 
@@ -25,8 +26,8 @@ function App() {
               </Link>
             </Flex>
             <Switch>
-              <Route path="/liked"></Route>
-              <Route path="/"></Route>
+              <Route path="/liked" />
+              <Route path="/" component={Cats} />
             </Switch>
           </ChakraProvider>
         </QueryClientProvider>
