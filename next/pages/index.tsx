@@ -44,18 +44,29 @@ export default function Cats() {
       {data && (
         <VStack spacing={[2, 4]}>
           {data.pages.flat().map(({ id, url }) => (
-            <Box
+            <Flex
               p={2}
               rounded="sm"
               shadow="sm"
               w="full"
+              h={[32, 48, 52, 64]}
               key={id}
               position="relative"
               _hover={{ shadow: "md" }}
               cursor="pointer"
+              align="stretch"
+              justify="center"
             >
-              <Image src={url} alt="Cat" maxH={[32, 48, 52, 64]} mx="auto" />
-            </Box>
+              <Flex
+                position="absolute"
+                align="center"
+                justify="center"
+                h="full"
+              >
+                <Spinner size="lg" />
+              </Flex>
+              <Image position="relative" src={url} alt="Cat" maxH="full" z={10} mx="auto" />
+            </Flex>
           ))}
         </VStack>
       )}
