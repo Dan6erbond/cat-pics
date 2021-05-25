@@ -1,4 +1,4 @@
-import { ChakraProvider, Flex, Link } from "@chakra-ui/react";
+import { ChakraProvider, Flex, Heading, Link, Spacer } from "@chakra-ui/react";
 import React from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import {
@@ -17,8 +17,10 @@ function App() {
       <Router>
         <QueryClientProvider client={queryClient}>
           <ChakraProvider>
-            <Flex align="center" justify="flex-end">
-              <Link as={RouterLink} to="/liked">
+            <Flex align="center" py={4} px={6} shadow="base">
+              <Heading size="lg">Cats API</Heading>
+              <Spacer />
+              <Link as={RouterLink} to="/liked" color="blue.500">
                 Liked
               </Link>
             </Flex>
