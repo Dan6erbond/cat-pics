@@ -1,65 +1,84 @@
-import Head from "next/head";
-import styles from "../styles/Home.module.css";
+import { Image } from "@chakra-ui/image";
+import { Box, Flex, VStack } from "@chakra-ui/layout";
+import { Spinner } from "@chakra-ui/react";
+import { Skeleton } from "@chakra-ui/skeleton";
+import { Cat } from "@typeDefs/cats";
+import React from "react";
+import { useInView } from "react-intersection-observer";
+import { QueryFunction, useInfiniteQuery } from "react-query";
 
-export default function Home() {
+const url = "https://api.thecatapi.com/v1/images/search";
+
+const fetchCats: QueryFunction<Cat[]> = async ({ pageParam }) => {
+  const res = await fetch(
+    `${url}?${new URLSearchParams({
+      order: "DESC",
+      limit: "25",
+      page: pageParam,
+    })}`
+  );
+  const json = await res.json();
+  return json;
+};
+
+export default function Cats() {
+  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery<
+    Cat[]
+  >("cats", fetchCats, {
+    getNextPageParam: (lastPage, pages) =>
+      lastPage.length ? pages.length : undefined,
+  });
+
+  const { ref, inView } = useInView({
+    threshold: 0.1,
+  });
+
+  React.useEffect(() => {
+    if (inView && !isFetching && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, isFetching, hasNextPage]);
+
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{" "}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{" "}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
+    <Box p={[4, 8]}>
+      {data && (
+        <VStack spacing={[2, 4]}>
+          {data.pages.flat().map(({ id, url }) => (
+            <Box
+              p={2}
+              rounded="sm"
+              shadow="sm"
+              w="full"
+              key={id}
+              position="relative"
+              _hover={{ shadow: "md" }}
+              cursor="pointer"
+            >
+              <Image src={url} alt="Cat" maxH={[32, 48, 52, 64]} mx="auto" />
+            </Box>
+          ))}
+        </VStack>
+      )}
+      <VStack spacing={[2, 4]}>
+        {isFetching ? (
+          <>
+            <Box p={2} rounded="sm" shadow="sm" w="full">
+              <Skeleton w="full" h={[32, 48, 52, 64]} />
+            </Box>
+            {[...new Array(4)].map((_, idx) => (
+              <Box key={idx} p={2} rounded="sm" shadow="sm" w="full">
+                <Skeleton w="full" h={[32, 48, 52, 64]} />
+              </Box>
+            ))}
+          </>
+        ) : (
+          hasNextPage && (
+            <Flex ref={ref} align="center" justify="center">
+              <Spinner size="md" />
+            </Flex>
+          )
+        )}
+      </VStack>
+    </Box>
   );
 }
