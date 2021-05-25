@@ -30,7 +30,11 @@ function App({ Component, pageProps }: AppProps) {
           zIndex="overlay"
           bg="white"
         >
-          <Heading size="lg">Cats</Heading>
+          <NextLink href="/">
+            <Link as={Heading} _hover={{ textDecoration: "none" }} size="lg">
+              Cats
+            </Link>
+          </NextLink>
           <Spacer />
           <NextLink href="/liked">
             <Link color="blue.500">Liked</Link>
