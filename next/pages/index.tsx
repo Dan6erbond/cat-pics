@@ -51,21 +51,26 @@ export default function Cats() {
               w="full"
               h={[32, 48, 52, 64]}
               key={id}
-              position="relative"
               _hover={{ shadow: "md" }}
               cursor="pointer"
               align="stretch"
               justify="center"
             >
-              <Flex
-                position="absolute"
-                align="center"
-                justify="center"
-                h="full"
-              >
-                <Spinner size="lg" />
-              </Flex>
-              <Image position="relative" src={url} alt="Cat" maxH="full" z={10} mx="auto" />
+              <Image
+                src={url}
+                alt="Cat"
+                maxH="full"
+                mx="auto"
+                fallback={
+                  <Flex
+                    align="center"
+                    justify="center"
+                    h="full"
+                  >
+                    <Spinner size="lg" />
+                  </Flex>
+                }
+              />
             </Flex>
           ))}
         </VStack>
