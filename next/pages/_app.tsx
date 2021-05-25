@@ -11,7 +11,7 @@ function App({ Component, pageProps }: AppProps) {
     <QueryClientProvider client={queryClient}>
       <ChakraProvider>
         <Flex align="center" py={4} px={6} shadow="base">
-          <Heading size="lg">Cats API</Heading>
+          <Heading size="lg">Cats</Heading>
           <Spacer />
           <NextLink href="/liked">
             <Link color="blue.500">Liked</Link>
