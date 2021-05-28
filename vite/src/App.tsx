@@ -5,10 +5,10 @@ import {
   BrowserRouter as Router,
   Link as RouterLink,
   Route,
-  Switch
+  Switch,
 } from "react-router-dom";
 import "./App.css";
-import Cats from "./pages/cats";
+import Cats from "./pages/index";
 
 const queryClient = new QueryClient();
 
